@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <record model="ir.actions.server" id="action_uom_pricing">
+    <field name="model_id" ref="sale.model_sale_order_line"/>
+    <field name="name">[JOS] UoM Pricing on Sale Order Line</field>
+    <field name="sequence">5</field>
+    <field name="state">code</field>
+    <field name="condition" eval="True"/>
+    <field name="code"><![CDATA[if record.product_uom != record.product_id.product_tmpl_id.uom_id:
+      uom_price = record.product_id.product_tmpl_id.x_uomprice_ids.search([('x_uom','=',record.product_uom.id)]).sorted(key=lambda r: r.x_qty)
+      if uom_price:
+        for item in uom_price:
+          if record.product_uom_qty >= item.x_qty:
+              record['price_unit'] = item.x_price
+          else:
+              break
+      else:
+        raise Warning('No price for given UoM')
+      ]]>
+    </field>
+  </record>
+  <record model="base.action.rule" id="auto_set_est_ship_date">
+      <field name="name">[JOS] UoM Pricing on Sale Order Line</field>
+      <field name="active" eval="True"/>
+      <field name="model_id" ref="sale.model_sale_order_line"/>
+      <field name="sequence" eval="2"/>
+      <field name="kind">on_change</field>
+      <field name="on_change_fields">product_uom,product_uom_qty</field>
+      <field name="server_action_ids" eval="[(6, 0, [ref('action_uom_pricing')])]"/>
+    </record>
+</odoo>
