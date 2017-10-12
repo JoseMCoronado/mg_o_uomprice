@@ -7,7 +7,7 @@
     <field name="state">code</field>
     <field name="condition" eval="True"/>
     <field name="code"><![CDATA[if record.product_uom != record.product_id.product_tmpl_id.uom_id:
-      uom_price = record.product_id.product_tmpl_id.x_uomprice_ids.search([('x_uom','=',record.product_uom.id)]).sorted(key=lambda r: r.x_qty)
+      uom_price = record.product_id.product_tmpl_id.x_uomprice_ids.search([('x_uom','=',record.product_uom.id),('x_product','=',record.product_id.product_tmpl_id.id)]).sorted(key=lambda r: r.x_qty)
       if uom_price:
         for item in uom_price:
           if record.product_uom_qty >= item.x_qty:
