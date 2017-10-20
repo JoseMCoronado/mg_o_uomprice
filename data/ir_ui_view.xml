@@ -14,7 +14,7 @@
                 <field name="x_product" invisible="1"/>
                 <field name="x_uom" required="1"/>
                 <field name="x_qty" required="1"/>
-                <field name="x_price" required="1"/>
+                <field name="x_price" required="1" digits="(14,5)"/>
               </tree>
             </field>
           </div>
